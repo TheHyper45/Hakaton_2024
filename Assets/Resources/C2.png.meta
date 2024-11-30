@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 5c0721c64936a94448e9d3da754099ab
+guid: 51d5d2f26cdd33945a5efd84fb1f7657
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7994499242824896335
-    second: stoneBlockBump_0
+      213: 6413734476913471024
+    second: C2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: stoneBlockBump_0
+      name: C2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 100
+        height: 100
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1b0fa4a9b45dd0190800000000000000
-      internalID: -7994499242824896335
+      spriteID: 03e6a1c7689220950800000000000000
+      internalID: 6413734476913471024
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      stoneBlockBump_0: -7994499242824896335
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -186,7 +186,6 @@ MonoBehaviour:
   camera: {fileID: 480816617}
   cameraLerpSpeed: 4
   blocksParent: {fileID: 394592050}
-  placeMarkerPrefab: {fileID: 2969286417441418879, guid: cfae4155fcb22a4418f15ce85bdd3e8b, type: 3}
   block: {fileID: 8775106031028512677, guid: 7b00f7124382bbc44a727ddea9532c6b, type: 3}
 --- !u!61 &433878131
 BoxCollider2D:
@@ -226,13 +225,13 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.64, y: 0.64}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 0.64, y: 0.64}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.5, y: 0.5}
+  m_Size: {x: 0.75, y: 0.75}
   m_EdgeRadius: 0
 --- !u!50 &433878132
 Rigidbody2D:
@@ -514,8 +513,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallPrefab: {fileID: 1274777067082430672, guid: 7b00f7124382bbc44a727ddea9532c6b, type: 3}
   background: {fileID: 7072811384561594636, guid: 9101c58e8a9501c4f896a9bbda38ab4d, type: 3}
-  mapWidth: 80
-  mapHeight: 80
+  mapWidth: 70
+  mapHeight: 70
   blocksParent: {fileID: 394592050}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

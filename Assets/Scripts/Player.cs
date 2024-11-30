@@ -24,7 +24,7 @@ public class Player : MonoBehaviour {
         Direction.Down => new Vector2(0.0f,-1.0f),
         Direction.Left => new Vector2(-1.0f,0.0f),
         Direction.Right => new Vector2(1.0f,0.0f),
-        _ => throw new InvalidEnumArgumentException(nameof(Direction)),
+        _ => throw new InvalidEnumArgumentException(nameof(Direction))
     };
 
     private void Awake() {
@@ -34,7 +34,8 @@ public class Player : MonoBehaviour {
 
     private void Update() {
         if(Input.GetKeyDown(KeyCode.Mouse0)) {
-            var newPosition = MathEx.AlignToTileGrid(transform.Position2D() - DirectionVector() * 0.64f);
+            var newPosition = MathEx.AlignToTileGrid(transform.Position2D() - DirectionVector());
+            print($"x: {newPosition.x}");
             var newBlock = Instantiate(block,newPosition,Quaternion.identity,blocksParent);
             newBlock.type = MapBlock.Type.DirectionUp;
         }
@@ -52,7 +53,7 @@ public class Player : MonoBehaviour {
     private void OnCollisionEnter2D(Collision2D collision) {
         if(collision.gameObject.TryGetComponent(out MapBlock mapBlock)) {
             if(mapBlock.type == MapBlock.Type.Death) {
-                Destroy(gameObject);
+                //Destroy(gameObject);
             }
         }
     }

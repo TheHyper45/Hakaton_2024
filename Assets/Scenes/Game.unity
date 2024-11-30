@@ -5173,11 +5173,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4c530ca8e661f04e8d62dbf0a2eb5d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelGeneration: {fileID: 911705206}
   speed: 3
   camera: {fileID: 480816617}
   cameraLerpSpeed: 4
-  blocksParent: {fileID: 394592050}
-  block: {fileID: 8775106031028512677, guid: 7b00f7124382bbc44a727ddea9532c6b, type: 3}
 --- !u!61 &433878131
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5619,7 +5618,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd12a241a3e11504a82453da8a3102fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wallPrefab: {fileID: 8775106031028512677, guid: 7b00f7124382bbc44a727ddea9532c6b, type: 3}
+  leftBlockPrefab: {fileID: 8775106031028512677, guid: 7b00f7124382bbc44a727ddea9532c6b, type: 3}
+  rightBlockPrefab: {fileID: 8775106031028512677, guid: d26fd733b1cd57949aecd1be480569c2, type: 3}
+  upBlockPrefab: {fileID: 8775106031028512677, guid: e9c5b31c876acc040971d9553567ca84, type: 3}
+  downBlockPrefab: {fileID: 8775106031028512677, guid: ebb2c595f9f929947bb43905598dcb13, type: 3}
   background: {fileID: 7072811384561594636, guid: 9101c58e8a9501c4f896a9bbda38ab4d, type: 3}
   mapWidth: 70
   mapHeight: 70

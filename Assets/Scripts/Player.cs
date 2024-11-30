@@ -4,15 +4,13 @@ using System.ComponentModel;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour {
     [SerializeField]
+    private LevelGeneration levelGeneration;
+    [SerializeField]
     private float speed;
     [SerializeField]
     private new Camera camera;
     [SerializeField]
     private float cameraLerpSpeed;
-    [SerializeField]
-    private Transform blocksParent;
-    [SerializeField]
-    private MapBlock block;
 
     private new Rigidbody2D rigidbody;
 
@@ -33,22 +31,21 @@ public class Player : MonoBehaviour {
     }
 
     private void Update() {
+        var newBlockPosition = MathEx.Floor(transform.Position2D() - DirectionVector());
         if(Input.GetKeyDown(KeyCode.Mouse0)) {
-            var block = InstantiateBlock();
             if(direction == Direction.Up || direction == Direction.Down) {
-                block.direction = Direction.Left;
+                levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Left);
             }
             else {
-                block.direction = Direction.Up;
+                levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Up);
             }
         }
         if(Input.GetKeyDown(KeyCode.Mouse1)) {
-            var block = InstantiateBlock();
             if(direction == Direction.Up || direction == Direction.Down) {
-                block.direction = Direction.Right;
+                levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Right);
             }
             else {
-                block.direction = Direction.Down;
+                levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Down);
             }
         }
         camera.transform.position = new Vector3(
@@ -64,20 +61,12 @@ public class Player : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision) {
         if(collision.gameObject.TryGetComponent(out MapBlock mapBlock)) {
-            if(mapBlock.type == MapBlock.Type.Death) {
+            if(mapBlock.GetBlockType() == MapBlock.Type.Death) {
                 Destroy(gameObject);
-                print("You lost!");
             }
-            else if(mapBlock.type == MapBlock.Type.Directional) {
-                direction = mapBlock.direction;
+            else if(mapBlock.GetBlockType() == MapBlock.Type.Directional) {
+                direction = mapBlock.GetBlockDirection();
             }
         }
-    }
-
-    private MapBlock InstantiateBlock() {
-        var newPosition = MathEx.Floor(transform.Position2D() - DirectionVector());
-        var newBlock = Instantiate(block,newPosition,Quaternion.identity,blocksParent);
-        newBlock.type = MapBlock.Type.Directional;
-        return newBlock;
     }
 }

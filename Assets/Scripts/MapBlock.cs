@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class MapBlock : MonoBehaviour {
     public enum Type { Directional,Death }
-    public Type type;
-    public Player.Direction direction;
+    [SerializeField]
+    private Type type;
+    [SerializeField]
+    private Player.Direction direction;
+    public Type GetBlockType() => type;
+    public Player.Direction GetBlockDirection() => direction;
 }

@@ -6,7 +6,7 @@ public class LevelGenration : MonoBehaviour
     public GameObject backgorund; // Prefab œciany
     public int[,] mazeMap = new int[,] // Tablica reprezentuj¹ca labirynt
     {
-        { 1, 1, 1, 1, 1 },
+        { 0, 1, 1, 1, 1 },
         { 1, 2, 2, 2, 1 },
         { 1, 1, 2, 1, 1 },
         { 1, 2, 2, 2, 1 },
@@ -35,12 +35,10 @@ public class LevelGenration : MonoBehaviour
                 }
                 if(mazeMap[y, x] == 2)
                 {
-                    print("x");
                     Vector3 position = new Vector3(x * 0.64f, -y * 0.64f, 0); // Pozycja w 2D
                     Instantiate(backgorund, position, Quaternion.identity);
                 }
             }
         }
     }
-    
 }

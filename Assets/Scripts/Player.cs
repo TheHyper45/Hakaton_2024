@@ -34,8 +34,7 @@ public class Player : MonoBehaviour {
 
     private void Update() {
         if(Input.GetKeyDown(KeyCode.Mouse0)) {
-            var newPosition = MathEx.AlignToTileGrid(transform.Position2D() - DirectionVector());
-            print($"x: {newPosition.x}");
+            var newPosition = MathEx.Floor(transform.Position2D() - DirectionVector());
             var newBlock = Instantiate(block,newPosition,Quaternion.identity,blocksParent);
             newBlock.type = MapBlock.Type.DirectionUp;
         }

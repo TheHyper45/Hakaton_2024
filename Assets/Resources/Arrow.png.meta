@@ -1,14 +1,10 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
-guid: 12d6176e4d416e343942983514b6fb8b
-=======
-guid: 08884b09c9366c241baa2b67e81a36bd
->>>>>>> 7692fc9d4bafd57efc4fb567f8490cf49b6db136
+guid: 1df8f724740ecbb4c978d1752f81a0ec
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2155899727899516888
-    second: whitetexture_0
+      213: -4346244404228752641
+    second: Arrow_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,28 +96,11 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-<<<<<<< HEAD
-    buildTarget: Android
-=======
-    buildTarget: WebGL
->>>>>>> 7692fc9d4bafd57efc4fb567f8490cf49b6db136
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: whitetexture_0
+      name: Arrow_0
       rect:
         serializedVersion: 2
         x: 0
@@ -136,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8202033be94b412e0800000000000000
-      internalID: -2155899727899516888
+      spriteID: ffa7ae2edb90fa3c0800000000000000
+      internalID: -4346244404228752641
       vertices: []
       indices: 
       edges: []

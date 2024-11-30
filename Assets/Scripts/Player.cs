@@ -34,9 +34,22 @@ public class Player : MonoBehaviour {
 
     private void Update() {
         if(Input.GetKeyDown(KeyCode.Mouse0)) {
-            var newPosition = MathEx.Floor(transform.Position2D() - DirectionVector());
-            var newBlock = Instantiate(block,newPosition,Quaternion.identity,blocksParent);
-            newBlock.type = MapBlock.Type.DirectionUp;
+            var block = InstantiateBlock();
+            if(direction == Direction.Up || direction == Direction.Down) {
+                block.direction = Direction.Left;
+            }
+            else {
+                block.direction = Direction.Up;
+            }
+        }
+        if(Input.GetKeyDown(KeyCode.Mouse1)) {
+            var block = InstantiateBlock();
+            if(direction == Direction.Up || direction == Direction.Down) {
+                block.direction = Direction.Right;
+            }
+            else {
+                block.direction = Direction.Down;
+            }
         }
         camera.transform.position = new Vector3(
             Mathf.Lerp(camera.transform.position.x,transform.position.x,cameraLerpSpeed * Time.deltaTime),
@@ -52,8 +65,19 @@ public class Player : MonoBehaviour {
     private void OnCollisionEnter2D(Collision2D collision) {
         if(collision.gameObject.TryGetComponent(out MapBlock mapBlock)) {
             if(mapBlock.type == MapBlock.Type.Death) {
-                //Destroy(gameObject);
+                Destroy(gameObject);
+                print("You lost!");
+            }
+            else if(mapBlock.type == MapBlock.Type.Directional) {
+                direction = mapBlock.direction;
             }
         }
+    }
+
+    private MapBlock InstantiateBlock() {
+        var newPosition = MathEx.Floor(transform.Position2D() - DirectionVector());
+        var newBlock = Instantiate(block,newPosition,Quaternion.identity,blocksParent);
+        newBlock.type = MapBlock.Type.Directional;
+        return newBlock;
     }
 }

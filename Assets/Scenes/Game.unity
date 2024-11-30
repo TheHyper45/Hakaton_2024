@@ -119,6 +119,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &394592049
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 394592050}
+  m_Layer: 0
+  m_Name: MapBlocks
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &394592050
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394592049}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &433878129
 GameObject:
   m_ObjectHideFlags: 0
@@ -151,9 +182,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4c530ca8e661f04e8d62dbf0a2eb5d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 3
   camera: {fileID: 480816617}
   cameraLerpSpeed: 4
+  blocksParent: {fileID: 394592050}
+  placeMarkerPrefab: {fileID: 2969286417441418879, guid: cfae4155fcb22a4418f15ce85bdd3e8b, type: 3}
+  block: {fileID: 8775106031028512677, guid: 7b00f7124382bbc44a727ddea9532c6b, type: 3}
 --- !u!61 &433878131
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -443,7 +477,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 911705205}
-  - component: {fileID: 911705204}
+  - component: {fileID: 911705206}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -451,20 +485,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &911705204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 911705203}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd12a241a3e11504a82453da8a3102fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wallPrefab: {fileID: 1274777067082430672, guid: 7b00f7124382bbc44a727ddea9532c6b, type: 3}
-  backgorund: {fileID: 7072811384561594636, guid: 9101c58e8a9501c4f896a9bbda38ab4d, type: 3}
 --- !u!4 &911705205
 Transform:
   m_ObjectHideFlags: 0
@@ -480,6 +500,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &911705206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 911705203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd12a241a3e11504a82453da8a3102fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallPrefab: {fileID: 1274777067082430672, guid: 7b00f7124382bbc44a727ddea9532c6b, type: 3}
+  background: {fileID: 7072811384561594636, guid: 9101c58e8a9501c4f896a9bbda38ab4d, type: 3}
+  mapWidth: 80
+  mapHeight: 80
+  blocksParent: {fileID: 394592050}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -487,3 +524,4 @@ SceneRoots:
   - {fileID: 911705205}
   - {fileID: 480816618}
   - {fileID: 433878134}
+  - {fileID: 394592050}

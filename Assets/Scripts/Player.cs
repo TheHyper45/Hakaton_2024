@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.ComponentModel;
 
 static class TransformExtensions {
     public static Vector2 Position2D(this Transform transform) {
@@ -14,19 +15,35 @@ public class Player : MonoBehaviour {
     private new Camera camera;
     [SerializeField]
     private float cameraLerpSpeed;
+    [SerializeField]
+    private Transform blocksParent;
+    [SerializeField]
+    private MapBlock block;
 
     private new Rigidbody2D rigidbody;
 
-    private readonly Vector2 DirectionUp = new(0.0f,1.0f);
-    private readonly Vector2 DirectionDown = new(0.0f,-1.0f);
-    private readonly Vector2 DirectionLeft = new(-1.0f,0.0f);
-    private readonly Vector2 DirectionRight = new(1.0f,0.0f);
+    public enum Direction { Up,Down,Left,Right }
+    private Direction direction;
+
+    private Vector2 DirectionVector() => direction switch {
+        Direction.Up => new Vector2(0.0f,1.0f),
+        Direction.Down => new Vector2(0.0f,-1.0f),
+        Direction.Left => new Vector2(-1.0f,0.0f),
+        Direction.Right => new Vector2(1.0f,0.0f),
+        _ => throw new InvalidEnumArgumentException(nameof(Direction)),
+    };
 
     private void Awake() {
+        direction = Direction.Right;
         rigidbody = GetComponent<Rigidbody2D>();
     }
 
     private void Update() {
+        if(Input.GetKeyDown(KeyCode.Mouse0)) {
+            var newPosition = transform.Position2D() - DirectionVector() * 0.64f;
+            var newBlock = Instantiate(block,newPosition,Quaternion.identity,blocksParent);
+            newBlock.type = MapBlock.Type.DirectionUp;
+        }
         camera.transform.position = new Vector3(
             Mathf.Lerp(camera.transform.position.x,transform.position.x,cameraLerpSpeed * Time.deltaTime),
             Mathf.Lerp(camera.transform.position.y,transform.position.y,cameraLerpSpeed * Time.deltaTime),
@@ -35,22 +52,14 @@ public class Player : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        var moveDir = Vector2.zero;
-        if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
-            moveDir += DirectionUp;
+        rigidbody.MovePosition(speed * Time.fixedDeltaTime * DirectionVector() + transform.Position2D());
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if(collision.gameObject.TryGetComponent(out MapBlock mapBlock)) {
+            if(mapBlock.type == MapBlock.Type.Death) {
+                Destroy(gameObject);
+            }
         }
-        if(Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
-            moveDir += DirectionDown;
-        }
-        if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) {
-            moveDir += DirectionLeft;
-        }
-        if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) {
-            moveDir += DirectionRight;
-        }
-        if(moveDir.magnitude > 1.0f) {
-            moveDir.Normalize();
-        }
-        rigidbody.MovePosition(speed * Time.fixedDeltaTime * moveDir + transform.Position2D());
     }
 }

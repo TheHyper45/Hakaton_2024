@@ -45,7 +45,6 @@ public class Player : MonoBehaviour {
         if(moveDir.magnitude > 1.0f) {
             moveDir.Normalize();
         }
-        Rigidbody2D.SlideMovement slide = new() { gravity = Vector2.zero };
-        rigidbody.Slide(speed * moveDir,Time.fixedDeltaTime,slide);
+        rigidbody.MovePosition(speed * Time.fixedDeltaTime * moveDir + transform.position);
     }
 }

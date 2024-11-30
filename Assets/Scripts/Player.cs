@@ -1,12 +1,6 @@
 using UnityEngine;
 using System.ComponentModel;
 
-static class TransformExtensions {
-    public static Vector2 Position2D(this Transform transform) {
-        return new Vector2(transform.position.x,transform.position.y);
-    }
-}
-
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour {
     [SerializeField]
@@ -40,7 +34,7 @@ public class Player : MonoBehaviour {
 
     private void Update() {
         if(Input.GetKeyDown(KeyCode.Mouse0)) {
-            var newPosition = transform.Position2D() - DirectionVector() * 0.64f;
+            var newPosition = MathEx.AlignToTileGrid(transform.Position2D() - DirectionVector() * 0.64f);
             var newBlock = Instantiate(block,newPosition,Quaternion.identity,blocksParent);
             newBlock.type = MapBlock.Type.DirectionUp;
         }

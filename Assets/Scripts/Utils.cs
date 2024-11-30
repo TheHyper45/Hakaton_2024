@@ -17,4 +17,8 @@ static class MathEx {
     public static Vector2 Floor(Vector2 pos) {
         return new Vector2(Mathf.Floor(pos.x),Mathf.Floor(pos.y));
     }
+    
+    public static bool FloatsAreEqual(float x,float y) {
+        return Mathf.Abs(x - y) <= 0.0001f;
+    }
 }

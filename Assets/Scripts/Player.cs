@@ -59,14 +59,29 @@ public class Player : MonoBehaviour {
         rigidbody.MovePosition(speed * Time.fixedDeltaTime * DirectionVector() + transform.Position2D());
     }
 
-    private void OnCollisionEnter2D(Collision2D collision) {
-        if(collision.gameObject.TryGetComponent(out MapBlock mapBlock)) {
-            if(mapBlock.GetBlockType() == MapBlock.Type.Death) {
-                Destroy(gameObject);
-            }
-            else if(mapBlock.GetBlockType() == MapBlock.Type.Directional) {
-                direction = mapBlock.GetBlockDirection();
-            }
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if(!collision.gameObject.TryGetComponent(out MapBlock mapBlock)) {
+            return;
+        }
+        if(mapBlock.GetBlockType() == MapBlock.Type.Death) {
+            Destroy(gameObject);
+            return;
+        }
+        if(direction == Direction.Right && MathEx.FloatsAreEqual(transform.position.y,mapBlock.transform.position.y)) {
+            transform.position = new Vector3(mapBlock.transform.position.x - 1.0f,transform.position.y,0.0f);
+            direction = mapBlock.GetBlockDirection();
+        }
+        else if(direction == Direction.Left && MathEx.FloatsAreEqual(transform.position.y,mapBlock.transform.position.y)) {
+            transform.position = new Vector3(mapBlock.transform.position.x + 1.0f,transform.position.y,0.0f);
+            direction = mapBlock.GetBlockDirection();
+        }
+        else if(direction == Direction.Up && MathEx.FloatsAreEqual(transform.position.x,mapBlock.transform.position.x)) {
+            transform.position = new Vector3(transform.position.x,mapBlock.transform.position.y - 1.0f,0.0f);
+            direction = mapBlock.GetBlockDirection();
+        }
+        else if(direction == Direction.Down && MathEx.FloatsAreEqual(transform.position.x,mapBlock.transform.position.x)) {
+            transform.position = new Vector3(transform.position.x,mapBlock.transform.position.y + 1.0f,0.0f);
+            direction = mapBlock.GetBlockDirection();
         }
     }
 }

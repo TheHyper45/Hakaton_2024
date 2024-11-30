@@ -7,3 +7,5 @@ Motyw: sen programisty
 Język znienawidzony: C#
 
 
+Twórca honorowy:
+https://freesound.org/people/SamsterBirdies/

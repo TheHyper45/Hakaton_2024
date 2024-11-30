@@ -33,20 +33,12 @@ public class Player : MonoBehaviour {
     private void Update() {
         var newBlockPosition = MathEx.Floor(transform.Position2D() - DirectionVector());
         if(Input.GetKeyDown(KeyCode.Mouse0)) {
-            if(direction == Direction.Up || direction == Direction.Down) {
-                levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Left);
-            }
-            else {
-                levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Up);
-            }
+            var blockDir = (direction == Direction.Up || direction == Direction.Down) ? Direction.Left : Direction.Up;
+            levelGeneration.InstantiateDirectionalBlock(newBlockPosition,blockDir);
         }
         if(Input.GetKeyDown(KeyCode.Mouse1)) {
-            if(direction == Direction.Up || direction == Direction.Down) {
-                levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Right);
-            }
-            else {
-                levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Down);
-            }
+            var blockDir = (direction == Direction.Up || direction == Direction.Down) ? Direction.Right : Direction.Down;
+            levelGeneration.InstantiateDirectionalBlock(newBlockPosition,blockDir);
         }
         camera.transform.position = new Vector3(
             Mathf.Lerp(camera.transform.position.x,transform.position.x,cameraLerpSpeed * Time.deltaTime),
@@ -67,19 +59,19 @@ public class Player : MonoBehaviour {
             Destroy(gameObject);
             return;
         }
-        if(direction == Direction.Right && MathEx.FloatsAreEqual(transform.position.y,mapBlock.transform.position.y)) {
+        if(direction == Direction.Right && transform.position.x < mapBlock.transform.position.x && MathEx.FloatsAreEqual(transform.position.y,mapBlock.transform.position.y)) {
             transform.position = new Vector3(mapBlock.transform.position.x - 1.0f,transform.position.y,0.0f);
             direction = mapBlock.GetBlockDirection();
         }
-        else if(direction == Direction.Left && MathEx.FloatsAreEqual(transform.position.y,mapBlock.transform.position.y)) {
+        else if(direction == Direction.Left && transform.position.x > mapBlock.transform.position.x && MathEx.FloatsAreEqual(transform.position.y,mapBlock.transform.position.y)) {
             transform.position = new Vector3(mapBlock.transform.position.x + 1.0f,transform.position.y,0.0f);
             direction = mapBlock.GetBlockDirection();
         }
-        else if(direction == Direction.Up && MathEx.FloatsAreEqual(transform.position.x,mapBlock.transform.position.x)) {
+        else if(direction == Direction.Up && transform.position.y < mapBlock.transform.position.y && MathEx.FloatsAreEqual(transform.position.x,mapBlock.transform.position.x)) {
             transform.position = new Vector3(transform.position.x,mapBlock.transform.position.y - 1.0f,0.0f);
             direction = mapBlock.GetBlockDirection();
         }
-        else if(direction == Direction.Down && MathEx.FloatsAreEqual(transform.position.x,mapBlock.transform.position.x)) {
+        else if(direction == Direction.Down && transform.position.y > mapBlock.transform.position.y && MathEx.FloatsAreEqual(transform.position.x,mapBlock.transform.position.x)) {
             transform.position = new Vector3(transform.position.x,mapBlock.transform.position.y + 1.0f,0.0f);
             direction = mapBlock.GetBlockDirection();
         }

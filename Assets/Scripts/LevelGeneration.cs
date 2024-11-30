@@ -14,6 +14,8 @@ public class LevelGeneration : MonoBehaviour {
     [SerializeField]
     private MapBlock exitBlockPrefab;
     [SerializeField]
+    private MapBlock deathBlockPrefab;
+    [SerializeField]
     private GameObject background;
     [SerializeField]
     private int mapWidth;
@@ -32,20 +34,21 @@ public class LevelGeneration : MonoBehaviour {
     };
 
     public MapBlock InstantiateExitBlock(Vector2 pos) => Instantiate(exitBlockPrefab,new Vector3(pos.x,pos.y,0.0f),exitBlockPrefab.transform.rotation,blocksParent);
+    public MapBlock InstantiateDeathBlock(Vector2 pos) => Instantiate(deathBlockPrefab,new Vector3(pos.x,pos.y,0.0f),deathBlockPrefab.transform.rotation,blocksParent);
 
     private void Awake() {
         {
             int y = mapHeight / 2;
             for(int x = -mapWidth / 2;x <= mapWidth / 2;x += 1) {
-                InstantiateDirectionalBlock(new Vector2(x,y),Player.Direction.Right);
-                InstantiateDirectionalBlock(new Vector2(x,-y),Player.Direction.Left);
+                InstantiateDeathBlock(new Vector2(x,y));
+                InstantiateDeathBlock(new Vector2(x,-y));
             }
         }
         {
             int x = mapWidth / 2;
             for(int y = -mapHeight / 2;y <= mapHeight / 2;y += 1) {
-                InstantiateDirectionalBlock(new Vector2(x,y),Player.Direction.Down);
-                InstantiateDirectionalBlock(new Vector2(-x,y),Player.Direction.Up);
+                InstantiateDeathBlock(new Vector2(x,y));
+                InstantiateDeathBlock(new Vector2(-x,y));
             }
         }
         {

@@ -5614,6 +5614,7 @@ MonoBehaviour:
   upBlockPrefab: {fileID: 8775106031028512677, guid: e9c5b31c876acc040971d9553567ca84, type: 3}
   downBlockPrefab: {fileID: 8775106031028512677, guid: ebb2c595f9f929947bb43905598dcb13, type: 3}
   exitBlockPrefab: {fileID: -639910994614365729, guid: af01a59f4e419bc4b91e10773847f0cf, type: 3}
+  deathBlockPrefab: {fileID: 399717909533159242, guid: 9fe9806c28b98784290b00388f8fe897, type: 3}
   background: {fileID: 7072811384561594636, guid: 9101c58e8a9501c4f896a9bbda38ab4d, type: 3}
   mapWidth: 70
   mapHeight: 70

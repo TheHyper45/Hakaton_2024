@@ -1,4 +1,6 @@
-﻿[*.cs]
+﻿root = true
 
-# IDE0051: Usuń nieużywane prywatne składowe
-dotnet_diagnostic.IDE0051.severity = none
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8

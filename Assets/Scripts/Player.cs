@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.ComponentModel;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(AudioSource))]
@@ -23,6 +24,8 @@ public class Player : MonoBehaviour {
     private SpriteRenderer mainSprite;
     [SerializeField]
     private SpriteRenderer bloodSprite;
+    [SerializeField]
+    private TMP_Text timeText;
 
     private enum State { Preparation,Run,Lost,Won }
     private State state = State.Preparation;
@@ -34,6 +37,7 @@ public class Player : MonoBehaviour {
     private float immobileTimer = 0.0f;
     private float autoRestartTimer = 0.0f;
     private float currentSpeed = 0.0f;
+    private float currentTime = 0.0f;
 
     public enum Direction { Up,Down,Left,Right }
     private Direction direction;
@@ -84,9 +88,11 @@ public class Player : MonoBehaviour {
                 canvas.gameObject.SetActive(false);
                 shroud.SetActive(true);
                 camera.orthographicSize = 5.0f;
+                currentTime = 0.0f;
             }
         }
         else if(state == State.Run) {
+            currentTime += Time.deltaTime;
             if(Input.GetKeyDown(KeyCode.Tab)) {
                 shroud.SetActive(false);
             }
@@ -125,6 +131,7 @@ public class Player : MonoBehaviour {
             }
         }
         else if(state == State.Won) {
+            timeText.text = $"Time: {currentTime:F2} s.";
             camera.orthographicSize = Mathf.Clamp(camera.orthographicSize - Input.mouseScrollDelta.y,5.0f,15.0f);
             winCanvas.gameObject.SetActive(true);
             if(Input.GetKeyDown(KeyCode.Space)) {

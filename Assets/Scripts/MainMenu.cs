@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
     [SerializeField]
@@ -11,10 +10,13 @@ public class MainMenu : MonoBehaviour {
     private Button quitButton;
     [SerializeField]
     private InstructionsMenu instructionsMenu;
+    [SerializeField]
+    private LevelSelectionMenu levelSelectionMenu;
 
     private void Awake() {
         playButton.onClick.AddListener(() => {
-            SceneManager.LoadScene("LevelsList");
+            levelSelectionMenu.gameObject.SetActive(true);
+            gameObject.SetActive(false);
         });
         instructionsButton.onClick.AddListener(() => {
             instructionsMenu.gameObject.SetActive(true);

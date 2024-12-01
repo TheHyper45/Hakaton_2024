@@ -33,6 +33,7 @@ public class Player : MonoBehaviour {
     private AudioSource audioSource;
     private float immobileTimer = 0.0f;
     private float autoRestartTimer = 0.0f;
+    private float currentSpeed = 0.0f;
 
     public enum Direction { Up,Down,Left,Right }
     private Direction direction;
@@ -136,30 +137,30 @@ public class Player : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        if(state == State.Run) {
-            if(Mathf.Abs((prevPosition - transform.Position2D()).magnitude) <= 0.0001f) {
-                immobileTimer += Time.fixedDeltaTime;
-                if(immobileTimer >= 0.5f) {
-                    shroud.SetActive(false);
-                    state = State.Lost;
-                    mainSprite.enabled = false;
-                    bloodSprite.enabled = true;
-                    return;
-                }
+        if(state != State.Run) return;
+        currentSpeed = Input.GetKey(KeyCode.F) ? 10.0f : speed;
+        if(Mathf.Abs((prevPosition - transform.Position2D()).magnitude) <= 0.0001f) {
+            immobileTimer += Time.fixedDeltaTime;
+            if(immobileTimer >= 0.5f) {
+                shroud.SetActive(false);
+                state = State.Lost;
+                mainSprite.enabled = false;
+                bloodSprite.enabled = true;
+                return;
             }
-            else immobileTimer = 0.0f;
-            prevPosition = transform.Position2D();
-
-            if(Mathf.Abs(transform.position.x - prevGridPosition.x) >= 1.0f || Mathf.Abs(transform.position.y - prevGridPosition.y) >= 1.0f) {
-                audioSource.volume = Mathf.Clamp01((1.0f / (levelGeneration.exitBlock.transform.position - transform.position).magnitude) * 2.0f);
-                var raycastHit = Physics2D.Raycast(RaycastPosition(),DirectionVector(),1.0f,LayerMask.NameToLayer("Default"));
-                if(!raycastHit) {
-                    audioSource.Play();
-                }
-                prevGridPosition = transform.Position2D();
-            }
-            rigidbody.MovePosition(speed * Time.fixedDeltaTime * DirectionVector() + transform.Position2D());
         }
+        else immobileTimer = 0.0f;
+        prevPosition = transform.Position2D();
+
+        if(Mathf.Abs(transform.position.x - prevGridPosition.x) >= 1.0f || Mathf.Abs(transform.position.y - prevGridPosition.y) >= 1.0f) {
+            audioSource.volume = Mathf.Clamp01((1.0f / (levelGeneration.exitBlock.transform.position - transform.position).magnitude) * 2.0f);
+            var raycastHit = Physics2D.Raycast(RaycastPosition(),DirectionVector(),1.0f,LayerMask.NameToLayer("Default"));
+            if(!raycastHit) {
+                audioSource.Play();
+            }
+            prevGridPosition = transform.Position2D();
+        }
+        rigidbody.MovePosition(currentSpeed * Time.fixedDeltaTime * DirectionVector() + transform.Position2D());
     }
 
     private void OnTriggerStay2D(Collider2D collision) {

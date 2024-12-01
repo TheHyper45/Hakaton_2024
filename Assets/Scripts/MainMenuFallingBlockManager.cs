@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class MainMenuFallingBlockManager : MonoBehaviour {
     [SerializeField]
-    private MainMenuFallingBlock fallingBlockPrefab;
+    private List<MainMenuFallingBlock> fallingBlockPrefabs;
     [SerializeField]
     private Transform fallingBlackSpawnParent;
     private List<Transform> fallingBlockSpawns = new();
@@ -22,7 +22,7 @@ public class MainMenuFallingBlockManager : MonoBehaviour {
         timer += Time.deltaTime;
         if(timer > spawnTime) {
             var spawn = fallingBlockSpawns.RandomElement();
-            Instantiate(fallingBlockPrefab,spawn.position,Quaternion.identity);
+            Instantiate(fallingBlockPrefabs.RandomElement(),spawn.position,Quaternion.identity);
             timer = 0.0f;
         }
     }

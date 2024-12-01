@@ -7,5 +7,11 @@ Motyw: sen programisty
 Język znienawidzony: C#
 
 
-Twórca honorowy:
+Osoby zasłużone dla projektU:
+
+Dźwięk:
 https://freesound.org/people/SamsterBirdies/
+
+Obraz:
+Kot - Marcin Chilicki
+

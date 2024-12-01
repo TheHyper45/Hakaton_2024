@@ -129,25 +129,30 @@ public class Player : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        /*if(Mathf.Abs((prevPosition - transform.Position2D()).magnitude) <= 0.0001f) {
-            immobileTimer += Time.fixedDeltaTime;
-            if(immobileTimer >= 3.0f) {
-                Destroy(gameObject);
-                return;
+        if(state == State.Run) {
+            if(Mathf.Abs((prevPosition - transform.Position2D()).magnitude) <= 0.0001f) {
+                immobileTimer += Time.fixedDeltaTime;
+                if(immobileTimer >= 0.5f) {
+                    shroud.SetActive(false);
+                    state = State.Lost;
+                    mainSprite.enabled = false;
+                    bloodSprite.enabled = true;
+                    return;
+                }
             }
-        }
-        else immobileTimer = 0.0f;
-        prevPosition = transform.Position2D();*/
-        if(state != State.Run) return;
-        if(Mathf.Abs(transform.position.x - prevGridPosition.x) >= 1.0f || Mathf.Abs(transform.position.y - prevGridPosition.y) >= 1.0f) {
-            audioSource.volume = Mathf.Clamp01((1.0f / (levelGeneration.exitBlock.transform.position - transform.position).magnitude) * 2.0f);
-            var raycastHit = Physics2D.Raycast(RaycastPosition(),DirectionVector(),1.0f,LayerMask.NameToLayer("Default"));
-            if(!raycastHit) {
-                audioSource.Play();
+            else immobileTimer = 0.0f;
+            prevPosition = transform.Position2D();
+
+            if(Mathf.Abs(transform.position.x - prevGridPosition.x) >= 1.0f || Mathf.Abs(transform.position.y - prevGridPosition.y) >= 1.0f) {
+                audioSource.volume = Mathf.Clamp01((1.0f / (levelGeneration.exitBlock.transform.position - transform.position).magnitude) * 2.0f);
+                var raycastHit = Physics2D.Raycast(RaycastPosition(),DirectionVector(),1.0f,LayerMask.NameToLayer("Default"));
+                if(!raycastHit) {
+                    audioSource.Play();
+                }
+                prevGridPosition = transform.Position2D();
             }
-            prevGridPosition = transform.Position2D();
+            rigidbody.MovePosition(speed * Time.fixedDeltaTime * DirectionVector() + transform.Position2D());
         }
-        rigidbody.MovePosition(speed * Time.fixedDeltaTime * DirectionVector() + transform.Position2D());
     }
 
     private void OnTriggerStay2D(Collider2D collision) {

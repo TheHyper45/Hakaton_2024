@@ -1377,7 +1377,7 @@ MonoBehaviour:
   - {fileID: 5970931802406549094, guid: 92e18270674f92543add950151278fdb, type: 3}
   - {fileID: 5970931802406549094, guid: ed71c22621add934f9a6dd9dfa8dadb2, type: 3}
   fallingBlackSpawnParent: {fileID: 661102216}
-  spawnTime: 1
+  spawnTime: 0.5
 --- !u!1 &728492602
 GameObject:
   m_ObjectHideFlags: 0

@@ -86,6 +86,9 @@ public class Player : MonoBehaviour {
             }
         }
         else if(state == State.Run) {
+            if(Input.GetKeyDown(KeyCode.Tab)) {
+                shroud.SetActive(false);
+            }
             if(Input.GetKeyDown(KeyCode.R)) {
                 direction = Direction.Right;
                 transform.position = startPosition;
@@ -121,9 +124,13 @@ public class Player : MonoBehaviour {
             }
         }
         else if(state == State.Won) {
+            camera.orthographicSize = Mathf.Clamp(camera.orthographicSize - Input.mouseScrollDelta.y,5.0f,15.0f);
             winCanvas.gameObject.SetActive(true);
             if(Input.GetKeyDown(KeyCode.Space)) {
                 SceneManager.LoadScene(levelGeneration.NextLevelName());
+            }
+            if(Input.GetKeyDown(KeyCode.Return)) {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }
     }

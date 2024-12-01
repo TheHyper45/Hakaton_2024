@@ -3,6 +3,8 @@ using System.ComponentModel;
 
 public class LevelGeneration : MonoBehaviour {
     [SerializeField]
+    private string nextLevelName;
+    [SerializeField]
     private MapBlock leftBlockPrefab;
     [SerializeField]
     private MapBlock rightBlockPrefab;
@@ -10,8 +12,6 @@ public class LevelGeneration : MonoBehaviour {
     private MapBlock upBlockPrefab;
     [SerializeField]
     private MapBlock downBlockPrefab;
-    //[SerializeField]
-    //private MapBlock exitBlockPrefab;
     [SerializeField]
     private MapBlock deathBlockPrefab;
     public MapBlock exitBlock;
@@ -23,7 +23,8 @@ public class LevelGeneration : MonoBehaviour {
     private int mapHeight;
     [SerializeField]
     private Transform blocksParent;
-    //public MapBlock ExitBlock { get; private set; }
+
+    public string NextLevelName() => nextLevelName;
 
     public MapBlock InstantiateDirectionalBlock(Vector2 pos,Player.Direction dir) => dir switch {
         Player.Direction.Left => Instantiate(leftBlockPrefab,new Vector3(pos.x,pos.y,0.0f),leftBlockPrefab.transform.rotation,blocksParent),
@@ -33,7 +34,6 @@ public class LevelGeneration : MonoBehaviour {
         _ => throw new InvalidEnumArgumentException(nameof(Player.Direction))
     };
 
-    //public MapBlock InstantiateExitBlock(Vector2 pos) => Instantiate(exitBlockPrefab,new Vector3(pos.x,pos.y,0.0f),exitBlockPrefab.transform.rotation,blocksParent);
     public MapBlock InstantiateDeathBlock(Vector2 pos) => Instantiate(deathBlockPrefab,new Vector3(pos.x,pos.y,0.0f),deathBlockPrefab.transform.rotation,blocksParent);
 
     private void Awake() {
@@ -51,13 +51,6 @@ public class LevelGeneration : MonoBehaviour {
                 InstantiateDeathBlock(new Vector2(-x,y));
             }
         }
-        /*{
-            InstantiateDirectionalBlock(new Vector2(1.0f,1.0f),Player.Direction.Right);
-            InstantiateDirectionalBlock(new Vector2(10.0f,0.0f),Player.Direction.Down);
-            InstantiateDirectionalBlock(new Vector2(9.0f,-10.0f),Player.Direction.Left);
-            InstantiateDirectionalBlock(new Vector2(0.0f,-9.0f),Player.Direction.Up);
-        }
-        ExitBlock = InstantiateExitBlock(new Vector2(2.0f,8.0f));*/
     }
 
     private void OnDrawGizmos() {

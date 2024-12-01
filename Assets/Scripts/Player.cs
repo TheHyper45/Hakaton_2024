@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using System.ComponentModel;
 using UnityEngine.SceneManagement;
 
@@ -17,15 +16,23 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private Canvas canvas;
     [SerializeField]
+    private Canvas winCanvas;
+    [SerializeField]
     private GameObject shroud;
+    [SerializeField]
+    private SpriteRenderer mainSprite;
+    [SerializeField]
+    private SpriteRenderer bloodSprite;
 
-    private bool gameStarted = false;
+    private enum State { Preparation,Run,Lost,Won }
+    private State state = State.Preparation;
     private Vector2 startPosition;
     private Vector2 prevPosition;
     private Vector2 prevGridPosition;
     private new Rigidbody2D rigidbody;
     private AudioSource audioSource;
     private float immobileTimer = 0.0f;
+    private float autoRestartTimer = 0.0f;
 
     public enum Direction { Up,Down,Left,Right }
     private Direction direction;
@@ -46,8 +53,11 @@ public class Player : MonoBehaviour {
     };
 
     private void Awake() {
+        mainSprite.enabled = true;
+        bloodSprite.enabled = false;
         shroud.SetActive(false);
         canvas.gameObject.SetActive(true);
+        winCanvas.gameObject.SetActive(false);
         startPosition = transform.Position2D();
         prevPosition = transform.Position2D();
         prevGridPosition = transform.Position2D();
@@ -62,48 +72,59 @@ public class Player : MonoBehaviour {
             Mathf.Lerp(camera.transform.position.y,transform.position.y,cameraLerpSpeed * Time.deltaTime),
             camera.transform.position.z
         );
-        if(!gameStarted) {
+
+        if(Input.GetKeyDown(KeyCode.Escape)) {
+            SceneManager.LoadScene("MainMenu");
+        }
+        if(state == State.Preparation) {
             camera.orthographicSize = Mathf.Clamp(camera.orthographicSize - Input.mouseScrollDelta.y,5.0f,15.0f);
             if(Input.GetKeyDown(KeyCode.Space)) {
-                gameStarted = true;
+                state = State.Run;
                 canvas.gameObject.SetActive(false);
                 shroud.SetActive(true);
                 camera.orthographicSize = 5.0f;
             }
-            if(Input.GetKeyDown(KeyCode.Escape)) {
-                SceneManager.LoadScene("MainMenu");
+        }
+        else if(state == State.Run) {
+            if(Input.GetKeyDown(KeyCode.R)) {
+                direction = Direction.Right;
+                transform.position = startPosition;
+                prevGridPosition = transform.Position2D();
+                return;
             }
-            return;
+            var newBlockPosition = MathEx.Floor(transform.Position2D());
+            if(Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
+                if(direction == Direction.Left) newBlockPosition.x += 1.0f;
+                if(direction == Direction.Down) newBlockPosition.y += 1.0f;
+                levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Up);
+            }
+            if(Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) {
+                if(direction == Direction.Left) newBlockPosition.x += 1.0f;
+                if(direction == Direction.Down) newBlockPosition.y += 1.0f;
+                levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Down);
+            }
+            if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
+                if(direction == Direction.Left) newBlockPosition.x += 1.0f;
+                if(direction == Direction.Down) newBlockPosition.y += 1.0f;
+                levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Left);
+            }
+            if(Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) {
+                if(direction == Direction.Left) newBlockPosition.x += 1.0f;
+                if(direction == Direction.Down) newBlockPosition.y += 1.0f;
+                levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Right);
+            }
         }
-        if(Input.GetKeyDown(KeyCode.Escape)) {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        else if(state == State.Lost) {
+            autoRestartTimer += Time.deltaTime;
+            if(autoRestartTimer >= 3.0f) {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
         }
-        if(Input.GetKeyDown(KeyCode.R)) {
-            direction = Direction.Right;
-            transform.position = startPosition;
-            prevGridPosition = transform.Position2D();
-            return;
-        }
-        var newBlockPosition = MathEx.Floor(transform.Position2D());
-        if(Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
-            if(direction == Direction.Left) newBlockPosition.x += 1.0f;
-            if(direction == Direction.Down) newBlockPosition.y += 1.0f;
-            levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Up);
-        }
-        if(Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) {
-            if(direction == Direction.Left) newBlockPosition.x += 1.0f;
-            if(direction == Direction.Down) newBlockPosition.y += 1.0f;
-            levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Down);
-        }
-        if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
-            if(direction == Direction.Left) newBlockPosition.x += 1.0f;
-            if(direction == Direction.Down) newBlockPosition.y += 1.0f;
-            levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Left);
-        }
-        if(Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) {
-            if(direction == Direction.Left) newBlockPosition.x += 1.0f;
-            if(direction == Direction.Down) newBlockPosition.y += 1.0f;
-            levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Right);
+        else if(state == State.Won) {
+            winCanvas.gameObject.SetActive(true);
+            if(Input.GetKeyDown(KeyCode.Space)) {
+                SceneManager.LoadScene(levelGeneration.NextLevelName());
+            }
         }
     }
 
@@ -117,7 +138,7 @@ public class Player : MonoBehaviour {
         }
         else immobileTimer = 0.0f;
         prevPosition = transform.Position2D();*/
-        if(!gameStarted) return;
+        if(state != State.Run) return;
         if(Mathf.Abs(transform.position.x - prevGridPosition.x) >= 1.0f || Mathf.Abs(transform.position.y - prevGridPosition.y) >= 1.0f) {
             audioSource.volume = Mathf.Clamp01((1.0f / (levelGeneration.exitBlock.transform.position - transform.position).magnitude) * 2.0f);
             var raycastHit = Physics2D.Raycast(RaycastPosition(),DirectionVector(),1.0f,LayerMask.NameToLayer("Default"));
@@ -129,14 +150,8 @@ public class Player : MonoBehaviour {
         rigidbody.MovePosition(speed * Time.fixedDeltaTime * DirectionVector() + transform.Position2D());
     }
 
-    private IEnumerator LoadSceneCoroutine(float length) {
-        yield return new WaitForSeconds(length);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        yield return null;
-    }
-
     private void OnTriggerStay2D(Collider2D collision) {
-        if(!gameStarted) return;
+        if(state != State.Run) return;
         if(!collision.gameObject.TryGetComponent(out MapBlock mapBlock)) return;
         bool hitBlock = false;
         if(direction == Direction.Right && transform.position.x < mapBlock.transform.position.x && MathEx.FloatsAreEqual(transform.position.y,mapBlock.transform.position.y)) {
@@ -160,12 +175,15 @@ public class Player : MonoBehaviour {
             mapBlock.audioSource.Play();
             if(mapBlock.GetBlockType() == MapBlock.Type.Death) {
                 shroud.SetActive(false);
-                gameStarted = false;
-                StartCoroutine(LoadSceneCoroutine(mapBlock.audioSource.clip.length + 0.5f));
+                state = State.Lost;
+                mainSprite.enabled = false;
+                bloodSprite.enabled = true;
             }
             else if(mapBlock.GetBlockType() == MapBlock.Type.Exit) {
                 shroud.SetActive(false);
-                gameStarted = false;
+                state = State.Won;
+                mainSprite.enabled = false;
+                winCanvas.gameObject.SetActive(true);
             }
         }
     }

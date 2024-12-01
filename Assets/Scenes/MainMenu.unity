@@ -301,7 +301,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3041614440236741994, guid: d3c78f3d01b8af6499cd625f42800532, type: 3}
       propertyPath: m_text
-      value: Level 2
+      value: Instruction
       objectReference: {fileID: 0}
     - target: {fileID: 6069415557607568134, guid: d3c78f3d01b8af6499cd625f42800532, type: 3}
       propertyPath: m_Pivot.y
@@ -1287,7 +1287,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3041614440236741994, guid: d3c78f3d01b8af6499cd625f42800532, type: 3}
       propertyPath: m_text
-      value: Level 1
+      value: Play
       objectReference: {fileID: 0}
     - target: {fileID: 6069415557607568134, guid: d3c78f3d01b8af6499cd625f42800532, type: 3}
       propertyPath: m_Pivot.x
@@ -1396,7 +1396,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3041614440236741994, guid: d3c78f3d01b8af6499cd625f42800532, type: 3}
       propertyPath: m_text
-      value: Level 3
+      value: Quit
       objectReference: {fileID: 0}
     - target: {fileID: 6069415557607568134, guid: d3c78f3d01b8af6499cd625f42800532, type: 3}
       propertyPath: m_Pivot.x

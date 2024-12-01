@@ -1,7 +1,7 @@
+using TMPro;
 using UnityEngine;
 using System.ComponentModel;
 using UnityEngine.SceneManagement;
-using TMPro;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(AudioSource))]
@@ -38,6 +38,7 @@ public class Player : MonoBehaviour {
     private float autoRestartTimer = 0.0f;
     private float currentSpeed = 0.0f;
     private float currentTime = 0.0f;
+    private static float[] bestTime = new float[] { float.PositiveInfinity,float.PositiveInfinity,float.PositiveInfinity,float.PositiveInfinity,float.PositiveInfinity };
 
     public enum Direction { Up,Down,Left,Right }
     private Direction direction;
@@ -131,7 +132,10 @@ public class Player : MonoBehaviour {
             }
         }
         else if(state == State.Won) {
-            timeText.text = $"Time: {currentTime:F2} s.";
+            if(currentTime < bestTime[levelGeneration.Index()]) {
+                bestTime[levelGeneration.Index()] = currentTime;
+            }
+            timeText.text = $"Time: {currentTime:F2} s. Best time: {bestTime[levelGeneration.Index()]:F2} s.";
             camera.orthographicSize = Mathf.Clamp(camera.orthographicSize - Input.mouseScrollDelta.y,5.0f,15.0f);
             winCanvas.gameObject.SetActive(true);
             if(Input.GetKeyDown(KeyCode.Space)) {

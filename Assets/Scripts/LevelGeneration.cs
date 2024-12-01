@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.ComponentModel;
+using UnityEngine.SceneManagement;
 
 public class LevelGeneration : MonoBehaviour {
     [SerializeField]
@@ -25,6 +26,7 @@ public class LevelGeneration : MonoBehaviour {
     private Transform blocksParent;
 
     public string NextLevelName() => nextLevelName;
+    public int Index() => int.Parse(SceneManager.GetActiveScene().name.Substring(5));
 
     public MapBlock InstantiateDirectionalBlock(Vector2 pos,Player.Direction dir) => dir switch {
         Player.Direction.Left => Instantiate(leftBlockPrefab,new Vector3(pos.x,pos.y,0.0f),leftBlockPrefab.transform.rotation,blocksParent),

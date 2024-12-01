@@ -22,7 +22,7 @@ public class MainMenu : MonoBehaviour {
     private void Awake() {
         timer = spawnTime;
         playButton.onClick.AddListener(() => {
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadScene("Level1");
         });
         quitButton.onClick.AddListener(() => {
             Application.Quit();

@@ -1,5 +1,7 @@
 using UnityEngine;
+using System.Collections;
 using System.ComponentModel;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(AudioSource))]
@@ -12,7 +14,13 @@ public class Player : MonoBehaviour {
     private new Camera camera;
     [SerializeField]
     private float cameraLerpSpeed;
+    [SerializeField]
+    private Canvas canvas;
+    [SerializeField]
+    private GameObject shroud;
 
+    private bool gameStarted = false;
+    private Vector2 startPosition;
     private Vector2 prevPosition;
     private Vector2 prevGridPosition;
     private new Rigidbody2D rigidbody;
@@ -38,6 +46,9 @@ public class Player : MonoBehaviour {
     };
 
     private void Awake() {
+        shroud.SetActive(false);
+        canvas.gameObject.SetActive(true);
+        startPosition = transform.Position2D();
         prevPosition = transform.Position2D();
         prevGridPosition = transform.Position2D();
         direction = Direction.Right;
@@ -46,9 +57,30 @@ public class Player : MonoBehaviour {
     }
 
     private void Update() {
+        camera.transform.position = new Vector3(
+            Mathf.Lerp(camera.transform.position.x,transform.position.x,cameraLerpSpeed * Time.deltaTime),
+            Mathf.Lerp(camera.transform.position.y,transform.position.y,cameraLerpSpeed * Time.deltaTime),
+            camera.transform.position.z
+        );
+        if(!gameStarted) {
+            camera.orthographicSize = Mathf.Clamp(camera.orthographicSize - Input.mouseScrollDelta.y,5.0f,15.0f);
+            if(Input.GetKeyDown(KeyCode.Space)) {
+                gameStarted = true;
+                canvas.gameObject.SetActive(false);
+                shroud.SetActive(true);
+                camera.orthographicSize = 5.0f;
+            }
+            if(Input.GetKeyDown(KeyCode.Escape)) {
+                SceneManager.LoadScene("MainMenu");
+            }
+            return;
+        }
         if(Input.GetKeyDown(KeyCode.Escape)) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        if(Input.GetKeyDown(KeyCode.R)) {
             direction = Direction.Right;
-            transform.position = Vector3.zero;
+            transform.position = startPosition;
             prevGridPosition = transform.Position2D();
             return;
         }
@@ -73,15 +105,10 @@ public class Player : MonoBehaviour {
             if(direction == Direction.Down) newBlockPosition.y += 1.0f;
             levelGeneration.InstantiateDirectionalBlock(newBlockPosition,Direction.Right);
         }
-        camera.transform.position = new Vector3(
-            Mathf.Lerp(camera.transform.position.x,transform.position.x,cameraLerpSpeed * Time.deltaTime),
-            Mathf.Lerp(camera.transform.position.y,transform.position.y,cameraLerpSpeed * Time.deltaTime),
-            camera.transform.position.z
-        );
     }
 
     private void FixedUpdate() {
-        if(Mathf.Abs((prevPosition - transform.Position2D()).magnitude) <= 0.0001f) {
+        /*if(Mathf.Abs((prevPosition - transform.Position2D()).magnitude) <= 0.0001f) {
             immobileTimer += Time.fixedDeltaTime;
             if(immobileTimer >= 3.0f) {
                 Destroy(gameObject);
@@ -89,10 +116,10 @@ public class Player : MonoBehaviour {
             }
         }
         else immobileTimer = 0.0f;
-        prevPosition = transform.Position2D();
-
+        prevPosition = transform.Position2D();*/
+        if(!gameStarted) return;
         if(Mathf.Abs(transform.position.x - prevGridPosition.x) >= 1.0f || Mathf.Abs(transform.position.y - prevGridPosition.y) >= 1.0f) {
-            audioSource.volume = Mathf.Clamp01((1.0f / (levelGeneration.ExitBlock.transform.position - transform.position).magnitude) * 2.0f);
+            audioSource.volume = Mathf.Clamp01((1.0f / (levelGeneration.exitBlock.transform.position - transform.position).magnitude) * 2.0f);
             var raycastHit = Physics2D.Raycast(RaycastPosition(),DirectionVector(),1.0f,LayerMask.NameToLayer("Default"));
             if(!raycastHit) {
                 audioSource.Play();
@@ -102,7 +129,14 @@ public class Player : MonoBehaviour {
         rigidbody.MovePosition(speed * Time.fixedDeltaTime * DirectionVector() + transform.Position2D());
     }
 
+    private IEnumerator LoadSceneCoroutine(float length) {
+        yield return new WaitForSeconds(length);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        yield return null;
+    }
+
     private void OnTriggerStay2D(Collider2D collision) {
+        if(!gameStarted) return;
         if(!collision.gameObject.TryGetComponent(out MapBlock mapBlock)) return;
         bool hitBlock = false;
         if(direction == Direction.Right && transform.position.x < mapBlock.transform.position.x && MathEx.FloatsAreEqual(transform.position.y,mapBlock.transform.position.y)) {
@@ -125,10 +159,13 @@ public class Player : MonoBehaviour {
             direction = mapBlock.GetBlockDirection();
             mapBlock.audioSource.Play();
             if(mapBlock.GetBlockType() == MapBlock.Type.Death) {
-                Destroy(gameObject);
+                shroud.SetActive(false);
+                gameStarted = false;
+                StartCoroutine(LoadSceneCoroutine(mapBlock.audioSource.clip.length + 0.5f));
             }
             else if(mapBlock.GetBlockType() == MapBlock.Type.Exit) {
-                Destroy(gameObject);
+                shroud.SetActive(false);
+                gameStarted = false;
             }
         }
     }
